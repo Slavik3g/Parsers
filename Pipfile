@@ -6,6 +6,12 @@ name = "pypi"
 [packages]
 fastapi = "*"
 uvicorn = {version = "*", extras = ["standard"]}
+pydantic-settings = "*"
+aiohttp = "*"
+pymongo = "*"
+bs4 = "*"
+kafka-python = "*"
+aiokafka = "*"
 
 [dev-packages]
 
