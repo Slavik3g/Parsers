@@ -7,10 +7,15 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./src:/app
+      - .:/app
     env_file:
       - .env
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    command: ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    restart: unless-stopped
+    depends_on:
+      - kafka
+      - zookeeper
+
   mongo:
     image: mongo:latest
     container_name: mongo
@@ -20,6 +25,34 @@ services:
       - mongo:/data/db
     ports:
       - '27017:27017'
+    restart: unless-stopped
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.2.4
+    container_name: zookeeper
+    ports:
+    - '2181:2181'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:5.3.1
+    container_name: kafka
+    ports:
+      - '9092:9092'
+      - '9997:9997'
+      - '29092:29092'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
 volumes:
   mongo:

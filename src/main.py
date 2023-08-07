@@ -1,32 +1,12 @@
-from typing import List
-from uuid import uuid4
-
 from fastapi import FastAPI
-import os
+import asyncio
+from src.consumer.consumer import read_messages
+from src.routers.lamoda_routers import router as lamoda_router
+from src.routers.twitch_routers import router as twitch_router
 
-from models import User
 app = FastAPI()
 
-db: List[User] = [
-    User(id=uuid4(),
-         first_name="Slava",
-         last_name="Nemo"),
-    User(id=uuid4(),
-         first_name="Anna",
-         last_name="Mihno")
-]
+app.include_router(lamoda_router)
+app.include_router(twitch_router)
 
-
-@app.get("/")
-async def root():
-    return {"message": f"{os.getenv('CLIENT_ID')}"}
-
-
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello{name}"}
-
-
-@app.get("/users")
-async def get_users():
-    return db
+asyncio.create_task(read_messages())
