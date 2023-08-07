@@ -12,6 +12,7 @@ pymongo = "*"
 bs4 = "*"
 kafka-python = "*"
 aiokafka = "*"
+twitchapi = "*"
 
 [dev-packages]
 

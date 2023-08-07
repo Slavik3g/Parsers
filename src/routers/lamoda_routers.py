@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Request
 from src.config.config import Config
 from src.config.database import Database
@@ -21,7 +23,7 @@ async def get_product(item_id: str):
 
 
 @router.get("/get_all_products")
-async def get_all_products():
+async def get_all_products() -> List[ProductDto]:
     return lamoda_controller_instance.get_positions()
 
 
@@ -47,5 +49,5 @@ async def create_product(request: Request):
 @router.post('/parse_lamoda/')
 async def parse_lamoda(request: Request):
     url = await request.json()
-    await send_message('lamoda_parser', url['url'])
+    await send_message('lamoda_parser', url['url'], "clothes")
     return {"message": "Parsing request sent to Kafka"}

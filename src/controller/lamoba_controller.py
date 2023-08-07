@@ -1,6 +1,6 @@
 from bson.errors import InvalidId
 from src.config.database import Database
-from src.exeption.lamoda_exception import InvalidPositionIdException, DefaultServerException
+from src.exeption.exception import InvalidPositionIdException, DefaultServerException
 
 
 class LamodaController:
