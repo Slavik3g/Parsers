@@ -1,5 +1,6 @@
 from src.config.database import Database
 from src.exeption.exception import InvalidPositionIdException, DefaultServerException
+from src.redis.redis_cache import redis_class_cache
 
 
 class TwitchController:

@@ -6,6 +6,7 @@ from src.config.database import Database
 from src.controller.lamoba_controller import LamodaController
 from src.dto.lamoda_dto import ProductDto
 from src.producer.producer import send_message
+from src.redis.redis_cache import redis_class_cache
 
 config = Config()
 
@@ -18,12 +19,14 @@ lamoda_controller_instance = LamodaController(database)
 
 
 @router.get("/get_product/{item_id}")
+@redis_class_cache
 async def get_product(item_id: str):
     return lamoda_controller_instance.get_position(item_id)
 
 
 @router.get("/get_all_products")
-async def get_all_products() -> List[ProductDto]:
+@redis_class_cache
+async def get_all_products():
     return lamoda_controller_instance.get_positions()
 
 
